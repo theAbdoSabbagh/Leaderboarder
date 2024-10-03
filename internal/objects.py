@@ -19,6 +19,8 @@ class Participant:
     
     def __str__(self):
         return f"{self.rank} | {self.name} | {self.major} | {self.score}"
+    
+
 class Leaderboard:
     def __init__(self):
         self.participants = []
@@ -39,7 +41,6 @@ class Leaderboard:
             "3": "🥉"
         }
 
-        # Get the emoji for the rank or use the rank directly if not in the dictionary
         rank = rank_emojis.get(rank, rank)
 
         # Use list comprehension to filter participants by rank

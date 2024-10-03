@@ -81,10 +81,8 @@ class Leaderboarder:
                 
                 self.logger.success(f"Modified the score of {participant.name} to {participant.score}")
 
-                # Update the leaderboard rankings
                 self.leaderboard.update_rankings()
 
-                # Save the data to data.json
                 self.jsonifier.data = self.leaderboard.as_json()
                 self.jsonifier.save_data()
 
