@@ -12,7 +12,7 @@ class Participant:
         self.name = name
         self.major = major
         self.score = score
-        self.score_raw = int(score.replace(',', ''))
+        self.score_raw = score if isinstance(score, int) else int(score.replace(',', ''))
 
     def __repr__(self):
         return f"{self.rank} | {self.name} | {self.major} | {self.score}"
@@ -31,7 +31,7 @@ class Leaderboard:
     def __str__(self):
         return "\n".join([str(participant) for participant in self.participants])
 
-    def add_participant(self, participant):
+    def add_participant(self, participant: Participant):
         self.participants.append(participant)
 
     def get_by_rank(self, rank: str) -> Union[List[Participant], Participant, None]:
@@ -49,7 +49,7 @@ class Leaderboard:
         return participants if len(participants) > 1 else participants[0] if participants else None
 
     def as_json(self):
-        return {
+        data = {
             "participants": [
                 {
                     "rank": participant.rank,
@@ -60,39 +60,33 @@ class Leaderboard:
             ]
         }
 
+        return data
+        
     def update_rankings(self):
-        # Sort participants by score in descending order
-        self.participants.sort(key=lambda p: p.score_raw, reverse=True)
+        # Sort self.participants by score in descending order
+        self.participants.sort(key=lambda x: x.score_raw, reverse=True)
+        
+        current_rank = 1
+        for i, participant in enumerate(self.participants):
+            participant.rank = str(current_rank)
 
-        # Initialize previous score and rank
-        previous_score = None
-        current_rank = 0
-
-        for index, participant in enumerate(self.participants):
-            # Check if the score is the same as the previous participant
-            if participant.score_raw == previous_score:
-                # If so, use the same rank as before
-                participant.rank = str(current_rank)
-            else:
-                # Otherwise, assign a new rank
-                current_rank = index + 1  # Ranks start from 1
-
-                # Update the rank with an emoji for the top three participants
-                if current_rank == 1:
-                    participant.rank = "🏆"
-                elif current_rank == 2:
-                    participant.rank = "🥈"
-                elif current_rank == 3:
-                    participant.rank = "🥉"
+            try:
+                if participant.score_raw == self.participants[i+1].score_raw:
+                    current_rank = current_rank
                 else:
-                    participant.rank = str(current_rank)
-
-            # Update previous score for the next iteration
-            previous_score = participant.score_raw
-
-        # Ensure correct ranking for ties
-        for index, participant in enumerate(self.participants):
-            # Check if current score matches the previous participant's score
-            if index > 0 and participant.score_raw == self.participants[index - 1].score_raw:
-                # If so, copy the rank from the previous participant
-                participant.rank = self.participants[index - 1].rank
+                    current_rank += 1
+            except IndexError:
+                if participant.score_raw == self.participants[i-1].score_raw:
+                    current_rank = current_rank
+                else:
+                    current_rank += 1
+            
+        # Add special icons for top ranks
+        if len(self.participants) > 0:
+            self.participants[0].rank = '🏆'
+        if len(self.participants) > 1:
+            self.participants[1].rank = '🥈'
+        if len(self.participants) > 2:
+            self.participants[2].rank = '🥉'
+        
+        return self.participants
