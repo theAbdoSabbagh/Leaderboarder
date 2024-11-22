@@ -8,8 +8,11 @@ class Jsonifier:
         self.load_data(self.file_name)
     
     def load_data(self, file_name: str):
-        with open(file_name, "r+") as file:
-            self.data = json.load(file)
+        try:
+            with open(file_name, "r+") as file:
+                self.data = json.load(file)
+        except FileNotFoundError:
+            pass
 
     def save_data(self):
         with open(self.file_name, "w+") as file:
