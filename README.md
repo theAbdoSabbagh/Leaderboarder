@@ -12,7 +12,7 @@ A tool I made for automatically updating the tech titans leaderboard of the AURA
 2. The leaderboard data will be displayed on the terminal
 3. The user will be prompted to enter the rank of the participant they want to update the score for.
     - If there is multiple participants with the same rank, the user will be prompted to enter the index of the participant they want to update, from a menu that will be displayed.
-4. The user will be prompted to enter the new score for the participant.
+4. The user will be prompted to enter the multiplier to be applied to the score of the participant.
 5. Until they enter E to exit the modification mode, the user can continue updating scores.
 6. Once the user exits the modification mode, the user will be asked if they want to save the updated leaderboard to a local file.
     - If the user chooses to save the file, the updated leaderboard will be saved to a file called `leaderboard.md` in the same directory as the script.
